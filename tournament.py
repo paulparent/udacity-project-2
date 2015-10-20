@@ -60,13 +60,18 @@ def registerPlayer(name):
 
     c.execute("INSERT INTO player (name) VALUES (%s)", (name,))
     DB.commit()
+    DB.close()
+
+"""
+(*) This code added to create player standing for newly created players;
+    this feels like a hack, so I'm looking for an alternate solution.
 
     c.execute("SELECT id FROM player WHERE name = (%s) ORDER BY id DESC", (name,))
     newID = c.fetchone()
     c.execute("INSERT INTO player_standing (player_id, tournament_id, "
               "points_total, bye_count) VALUES (%s,1,0,0)", (newID[0],))
     DB.commit()
-    DB.close()
+"""
 
 
 def playerStandings():
@@ -81,29 +86,29 @@ def playerStandings():
         name: the player's full name (as registered)
         wins: the number of matches the player has won
         matches: the number of matches the player has played
-
-    c.execute("SELECT player_id, p.name, COUNT(r.result), COUNT(r.player_id) "
-                "FROM player_standing s "
-                "JOIN match_result r USING (player_id) "
-                "JOIN player p ON s.player_id = p.id "
-                "GROUP BY player_id "
-                "ORDER BY s.points_total DESC")
-
     """
+
     DB = connect()
     c = DB.cursor()
 
-    c.execute("SELECT p.id, p.name, r.result, s.bye_count "
-              "FROM player p "
-              "LEFT JOIN player_standing s ON p.id = s.player_id "
-              "LEFT JOIN match_result r ON p.id = r.player_id "
-              "ORDER BY s.points_total")
+    c.execute("SELECT * FROM current_standings")
     standings = c.fetchall()
-    print standings
 
     DB.close()
-    return standings
 
+    # Walk through each tuple in standings list to check for null values
+    # and replace null values ('None') with 0
+    standings_clean = []
+    for (pid, name, wins, matches) in standings:
+        new_list = []
+        if wins == None:
+            new_list = [pid, name, 0, matches]
+        else:
+            new_list = [pid, name, wins, matches]
+        tuple(new_list) # re-cast list as tuple to be added back to list
+        standings_clean.append(new_list)
+
+    return standings_clean 
 
 def reportMatch(winner, loser):
     """Records the outcome of a single match between two players.
