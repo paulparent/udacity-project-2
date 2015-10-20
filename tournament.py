@@ -62,18 +62,6 @@ def registerPlayer(name):
     DB.commit()
     DB.close()
 
-"""
-(*) This code added to create player standing for newly created players;
-    this feels like a hack, so I'm looking for an alternate solution.
-
-    c.execute("SELECT id FROM player WHERE name = (%s) ORDER BY id DESC", (name,))
-    newID = c.fetchone()
-    c.execute("INSERT INTO player_standing (player_id, tournament_id, "
-              "points_total, bye_count) VALUES (%s,1,0,0)", (newID[0],))
-    DB.commit()
-"""
-
-
 def playerStandings():
     """Returns a list of the players and their win records, sorted by wins.
 

@@ -85,20 +85,6 @@ CREATE VIEW current_standings AS
   FROM player_matches pm
     LEFT JOIN player_wins pw ON pm.id = pw.id;
 
-/* Added to satisfy testStandingBeforeMatches() test in tournament_test.py.
-  Ensures first tournament created is ready and can be assigned to
-  new players, because test requires new players to have player standing
-  and player standing requires a tournament.
-
-  It would be better to not expect new players to have a player standing,
-  but I am proceeding under the assumption that I cannot change the test.
-
-  Working on alternate solution that checks returned matches and wins data,
-  and if null, sets the value to 0 before returning the list to tournament_test.  
-
-INSERT INTO tournament (id, name, start_date) VALUES (1, 'Default Tournament', '2015-01-01');
- */
-
 /* TEST DATA to Populate Database */
 INSERT INTO tournament (id, name, start_date) VALUES (2, 'Run the Jewels', '2015-10-15');
 
