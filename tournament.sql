@@ -85,6 +85,8 @@ CREATE VIEW current_standings AS
   FROM player_matches pm
     LEFT JOIN player_wins pw ON pm.id = pw.id;
 
+INSERT INTO tournament (id, name, start_date) VALUES (1, 'No Tournament Specified', '2015-01-01');
+
 /* TEST DATA to Populate Database */
 INSERT INTO tournament (id, name, start_date) VALUES (2, 'Run the Jewels', '2015-10-15');
 
