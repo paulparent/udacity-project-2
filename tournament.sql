@@ -1,16 +1,13 @@
 /* 
   Table definitions for the tournament project
 
-  Put your SQL 'create table' statements in this file; also 'create view'
-  statements if you choose to use them.
-
   Database Review Criteria:
   -------------------------
-  Meaningful names for tables and columns
-  No unnecessary tables or columns
-  Columns are the proper data type
-  Views used to make queries more concise (Extra Credit)
-  Properly specified primary and foreign keys (Extra Credit)
+  * Meaningful names for tables and columns
+  * No unnecessary tables or columns
+  * Columns are the proper data type
+  * Views used to make queries more concise (Extra Credit)
+  * Properly specified primary and foreign keys (Extra Credit)
 
   Quick Database Model Representation:
   ------------------------------------
@@ -20,10 +17,10 @@
   tournament_id*: INT, match_start: TIMESTAMP)
   match_result (match_id**: INT, player_id**: INT, result: TEXT)
   player_standing (player_id**: INT, tournament_id**: INT, points_total: INT,
-  bye_count: INT)
+    bye_count: INT)
 */
 
--- used during development to ensure clean start
+-- ensure clean start
 DROP DATABASE IF EXISTS tournament;
 CREATE DATABASE tournament;
 \c tournament;
@@ -81,13 +78,16 @@ CREATE VIEW player_matches AS
   ORDER BY COUNT(r.result) DESC;
 
 CREATE VIEW current_standings AS
-  SELECT pm.id, pm.name, pw."total wins", pm."total matches"
+  SELECT pm.id, pm.name, COALESCE(pw."total wins", 0) AS "total wins", pm."total matches"
   FROM player_matches pm
-    LEFT JOIN player_wins pw ON pm.id = pw.id;
+    LEFT JOIN player_wins pw ON pm.id = pw.id
+  ORDER BY "total wins" DESC;
 
 INSERT INTO tournament (id, name, start_date) VALUES (1, 'No Tournament Specified', '2015-01-01');
 
-/* TEST DATA to Populate Database */
+/******************************
+ TEST DATA to Populate Database 
+ ******************************/
 INSERT INTO tournament (id, name, start_date) VALUES (2, 'Run the Jewels', '2015-10-15');
 
 INSERT INTO player (id, name) VALUES (1, 'Paul');
