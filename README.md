@@ -1,4 +1,4 @@
-Project: Tournament Planner
+Project: Tournament Results
 ===========================
 Python module that uses a PostgreSQL database to keep track of players and matches for game tournaments using the Swiss System of creating match-ups between players.
 
